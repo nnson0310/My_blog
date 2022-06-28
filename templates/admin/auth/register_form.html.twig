@@ -1,0 +1,107 @@
+{% extends 'admin/auth/layout.html.twig' %}
+
+{% block title %}
+	Register Form
+{% endblock %}
+
+{% block style %}
+
+{% endblock %}
+
+
+{% block body %}
+<body>
+	<section
+		class="login common-img-bg">
+		<!-- Container-fluid starts -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="login-card card-block bg-white">
+						<form class="md-float-material" action="{{ url('admin_auth_register') }}" method="POST">
+							<input type="hidden" name="_token" value="{{ csrf_token('register') }}">
+							<div class="text-center">
+								<img src="{{ asset('assets/images/logo-black.png') }}" alt="logo">
+							</div>
+							<h3 class="text-center txt-primary">Create an account</h3>
+							<div class="md-input-wrapper">
+								<input type="text" class="md-form-control" name="username" value="{{ app.session.get('username') }}">
+								<label>Username</label>
+								{% for usernameError in app.flashes('username') %}
+									<h5>
+										{{ usernameError }}
+									</h5>
+								{% endfor %}
+							</div>
+							<div class="md-input-wrapper">
+								<input type="email" class="md-form-control" name="email" value="{{ app.session.get('email') }}">
+								<label>Email Address</label>
+								{% for emailError in app.flashes('email') %}
+									<h5>
+										{{ emailError }}
+									</h5>
+								{% endfor %}
+							</div>
+							<div class="md-input-wrapper">
+								<input type="password" class="md-form-control" name="password" id="password">
+								<label>Password</label>
+								{% for passwordError in app.flashes('password') %}
+									<h5>
+										{{ passwordError }}
+									</h5>
+								{% endfor %}
+							</div>
+							<div class="md-input-wrapper confirm-password">
+								<input type="password" class="md-form-control" name="confirm_password" id="confirm_password">
+								<label>Confirm Password</label>
+								<h5 id="confirm_msg"></h5>
+							</div>
+							<div class="md-input-wrapper">
+								<input type="password" class="md-form-control" name="registration_code" id="registration_code" required>
+								<label>Registration Code</label>
+								<span class="text-danger" style="font-size: 12px">* Note: This registration code is secured and sharing between admin only.</span>
+							</div>
+							<div class="rkmd-checkbox checkbox-rotate checkbox-ripple b-none m-b-20">
+								<label class="input-checkbox checkbox-primary">
+									<input type="checkbox" id="checkbox">
+									<span class="checkbox"></span>
+								</label>
+								<div class="captions">Remember Me</div>
+							</div>
+							<div class="col-xs-10 offset-xs-1">
+								<button type="submit" class="btn btn-primary btn-md btn-block waves-effect waves-light m-b-20">Sign up
+								</button>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 text-center">
+									<span class="text-muted">Already have an account?</span>
+									<a href="{{ path('admin_auth_login_form') }}" class="f-w-600 p-l-5">
+										Sign In Here</a>
+								</div>
+							</div>
+						</form>
+						<!-- end of form -->
+					</div>
+					<!-- end of login-card -->
+				</div>
+				<!-- end of col-sm-12 -->
+			</div>
+			<!-- end of row-->
+		</div>
+		<!-- end of container-fluid -->
+	</section>
+
+	<script>
+		$(document).ready(function () {
+			$("#password, #confirm_password").on("keyup", function () {
+				if ($("#password").val() != $("#confirm_password").val()) {
+					$("#confirm_msg").html("Confirm password does not match");
+				}
+				else {
+					$("#confirm_msg").html("");
+				}
+			})
+		});
+	</script>
+</body>
+{% endblock %}

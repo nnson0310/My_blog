@@ -1,0 +1,18 @@
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <form action="{{ path('admin_topic_delete') }}" method="POST">
+      <div class="modal-content">
+        <div class="modal-header">
+          <input type="hidden" name="_token" value="{{ csrf_token('delete_topic') }}">
+          <input type="hidden" name="topic_id" id="topic-id">
+          <h5 class="modal-title" id="modal-label">Are you truly want to delete this topic?</h5>
+          <p style="font-size: 15px; padding-top: 10px">You can recover this topic later in recycle bin.</p>
+        </div>
+        <div class="modal-footer text-center">
+          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

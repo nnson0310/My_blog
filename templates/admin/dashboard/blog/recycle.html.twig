@@ -1,0 +1,171 @@
+{% extends "/admin/dashboard/layout.html.twig" %}
+
+{% block title %}
+	Blog Recycle
+{% endblock %}
+
+{% block style %}
+	.btn-save {
+		color: #fff;
+		background-color: #007bff;
+	}
+
+	.btn-save:hover {
+		color: #373a3c;
+	}
+
+	a:focus {
+		color: none;
+	}
+
+	@media screen and (max-width: 600px) {
+		.csv-button {
+			margin-left: -15px;
+		}
+		.csv-rules {
+			margin-bottom: 15px;
+		}
+	}
+
+	small {
+		font-size: 15px;
+	}
+
+	.icofont-send-mail, .icofont-ui-delete {
+		font-size: 15px !important;
+	}
+
+	a.disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+
+	th {
+		text-align: center !important;
+	}
+	
+	.icofont-close-circled, .icofont-check-circled {
+		font-size: 25px !important;
+	}
+{% endblock %}
+
+{% block heading %}
+	<h4>
+		Dashboard
+	</h4>
+	<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_dashboard') }}">
+				<i class="icofont icofont-home"></i>
+			</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a>Recycle</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_blog_recycle') }}">Blog</a>
+		</li>
+	</ol>
+{% endblock %}
+
+{% set messages = app.flashes('msg') %}
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-block">
+						<div class="row">
+							<div class="col-sm-12 table-responsive">
+								<table class="table table-striped text-center table-hover">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>Title</th>
+											<th>Created By</th>
+											<th>Last Modified By</th>
+											<th>Created At</th>
+											<th>Updated At</th>
+											<th>Notification Email</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% if (blogs and blogs.getTotalItemCount > 0) %}
+											{% for index, blog in blogs %}
+												<tr>
+													<td>{{ blogs.getItemNumberPerPage * (blogs.getCurrentPageNumber - 1) + index + 1 }}</td>
+													<td>
+														{{ blog.getTitle()|slice(0,30) }}...
+                                                    </td>
+													</td>
+													<td>{{ blog.getCreatedBy().getUsername() }}</td>
+													{% if blog.getLastModifiedBy() %}
+														<td>{{ blog.getLastModifiedBy().getUsername() }}</td>
+													{% else %}
+														<td></td>
+													{% endif %}
+													<td>{{ blog.getCreatedAt()|date('d/m/Y') }}</td>
+													<td>{{ blog.getUpdatedAt()|date('d/m/Y') }}</td>
+													{% if blog.getNotificationEmail() == 0 %}
+														<td>
+															<i class="icofont icofont-close-circled"></i>
+														</td>
+													{% else %}
+														<td>
+															<i class="icofont icofont-check-circled"></td>
+														{% endif %}
+														<td>
+															<span>
+																<a id="showRecycleModal" data-toggle="modal" data-target="#recycle-modal" data-blog-id="{{ blog.getId() }}">
+																	<i class="icofont icofont-recycle"></i>
+																</a>
+															</span>
+														</td>
+													</tr>
+												{% endfor %}
+											{% else %}
+												<tr class="text-center">
+													<td colspan="8">No record found.</td>
+												</tr>
+											{% endif %}
+										</tbody>
+									</tbody>
+								</table>
+								{# Page pagination #}
+								<div class="row">
+									<div class="text-center" style="margin-top: 30px">
+										{{ knp_pagination_render(blogs) }}
+									</div>
+								</div>
+								{# End pagination #}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% include "admin/dashboard/modals/blog/recycle_modal.html.twig" %}
+		{% include "admin/dashboard/modals/notification_modal.html.twig" %}
+
+	{% endblock %}
+
+	{% block script %}
+		{# Show success message  #}
+		{% if messages %}
+			<script>
+				$('#notify-modal').modal('show');
+			</script>
+		{% endif %}
+
+		<script>
+			// pass id to recycle modal
+        $('#recycle-modal').on('show.bs.modal', function (event) {
+            var trigger = $(event.relatedTarget);
+            var blogId = trigger.data('blog-id');
+            var modal = $(this);
+            modal.find('#blog-id').val(blogId);
+        });
+		</script>
+	{% endblock %}

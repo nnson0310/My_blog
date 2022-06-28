@@ -1,0 +1,209 @@
+{% extends "/admin/dashboard/layout.html.twig" %}
+
+{% block title %}
+	News List
+{% endblock %}
+
+{% block style %}
+	.btn-save {
+		color: #fff;
+		background-color: #007bff;
+	}
+
+	.btn-save:hover {
+		color: #373a3c;
+	}
+
+	a:focus {
+		color: none;
+	}
+
+	@media screen and (max-width: 600px) {
+		.csv-button {
+			margin-left: -15px;
+		}
+		.csv-rules {
+			margin-bottom: 15px;
+		}
+	}
+
+	small {
+		font-size: 15px;
+	}
+
+	.icofont-send-mail, .icofont-ui-delete {
+		font-size: 15px !important;
+	}
+
+	a.disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+
+	th {
+		text-align: center !important;
+	}
+	
+	.icofont-close-circled, .icofont-check-circled {
+		font-size: 25px !important;
+	}
+{% endblock %}
+
+{% block heading %}
+	<h4>
+		Dashboard
+	</h4>
+	<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_dashboard') }}">
+				<i class="icofont icofont-home"></i>
+			</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_blog_index') }}">Blog Management</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="#">Index</a>
+		</li>
+	</ol>
+{% endblock %}
+
+{% set messages = app.flashes('msg') %}
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-md-4">
+							<h5 class="card-header-text">
+								<span>
+									<a href="{{ path('admin_blog_create_form') }}">
+										<i class="icofont icofont-plus-circle"></i>
+									</a>
+								</span>
+								Create Blog
+							</h5>
+						</div>
+					</div>
+
+					<div class="card-block">
+						<div class="row">
+							<div class="col-sm-12 table-responsive">
+								<table class="table table-hover table-striped text-center">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>Title</th>
+											<th>Created By</th>
+											<th>Last Modified By</th>
+											<th>Created At</th>
+											<th>Updated At</th>
+											<th>Notification Email</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% if blogs and blogs.getTotalItemCount > 0 %}
+											{% for index, blog in blogs %}
+											<tr>
+												<td>{{ blogs.getItemNumberPerPage * (blogs.getCurrentPageNumber - 1) + index + 1 }}</td>
+												<td><a href="{{ path('admin_blog_edit_form', {id: blog.getId()}) }}"><u>{{ blog.getTitle()|slice(0,30) }}...</u><a/></td>
+												<td>{{ blog.getCreatedBy().getUsername() }}</td>
+												{% if blog.getLastModifiedBy() %}
+												<td>{{ blog.getLastModifiedBy().getUsername() }}</td>
+												{% else %}
+												<td></td>
+												{% endif %}
+												<td>{{ blog.getCreatedAt()|date('d/m/Y') }}</td>
+												<td>{{ blog.getUpdatedAt()|date('d/m/Y') }}</td>
+												{% if blog.getNotificationEmail() == 0 %}
+												<td><i class="icofont icofont-close-circled"></i></td>
+												{% else %}
+												<td><i class="icofont icofont-check-circled"></td>
+												{% endif %}
+												<td>
+													<span>
+														<a class="send_notification_email {% if blog.getNotificationEmail() == 1 or blog.getDeleteFlag() == 1 %} disabled {% endif %}" data-blog-id="{{ blog.getId() }}" data-toggle="modal" data-target="#sendEmail" >
+															<i class="icofont icofont-email"></i>
+														</a>
+													</span>
+													<span style="margin-left: 15px">
+														<a class="{% if blog.getDeleteFlag() == 1 %} disabled {% endif %}" id="showDeleteModal" data-toggle="modal" data-target="#delete-modal" data-blog-id="{{ blog.getId() }}">
+															<i class="icofont icofont-ui-delete"></i>
+														</a>
+													</span>
+												</td>
+											</tr>
+											{% endfor %}
+										{% else %}
+											<tr class="text-center">
+												<td colspan="8">No Record Found.</td>
+											</tr>
+										{% endif %}
+									</tbody>
+								</table>
+								{# Page pagination #}
+								<div class="row">
+									<div class="text-center" style="margin-top: 30px">
+										{{ knp_pagination_render(blogs) }}
+									</div>
+								</div>
+								{# End pagination #}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% include "/admin/dashboard/modals/notification_modal.html.twig" %}
+		{% include "/admin/dashboard/modals/blog/delete_modal.html.twig" %}
+
+		{# Confirm modal #}
+		<div class="modal fade" id="sendEmail" tabindex="-1" role="dialog" aria-labelledby="alertModal" aria-hidden="true">
+		<div class="modal-dialog modal-md modal-dialog-centered" role="document">
+			<div class="modal-content text-center">
+			<div class="modal-header" style="background-color: #007bff">
+			</div>
+			<div class="modal-body">
+			Do you want to send notification email about this post for all subscribed user?
+			</div>
+			<form action="{{ path('admin_blog_notification_email') }}" method="POST">
+				<div class="modal-footer text-center">
+					<input type="hidden" name="_token" value="{{ csrf_token('send_notification_email') }}"/>
+					<input type="hidden" id="blog_id" name="blog_id"> 
+					<button style="margin-right: 10px" type="submit" class="btn btn-primary">Send</button>
+					<button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+				</div>
+			</form>
+			</div>
+		</div>
+		</div>
+
+	{% endblock %}
+
+	{% block script %}
+			{% if messages %}
+			<script>
+				$("#notify-modal").modal("show");
+			</script>
+			{% endif %}
+
+			<script>
+				$('#delete-modal').on('show.bs.modal', function (event) {
+					var trigger = $(event.relatedTarget);
+					var blogId = trigger.data('blog-id');
+					var modal = $(this);
+					modal.find('#blog-id').val(blogId);
+				});
+
+				//get blog id for notification email
+				$(".send_notification_email").on("click", function (e) {
+					const trigger = $(this);
+					const blogId = trigger.data("blog-id");
+
+					$("#blog_id").val(blogId);
+				});
+			</script>
+	{% endblock %}

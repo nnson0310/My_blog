@@ -1,0 +1,70 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    role.admin: 1
+    role.sub_admin: 2
+    delete_flag.deleted: 1
+
+    #this params is used for email confirmation
+    email_confirmation.confirmed: 1
+    blog_thumbnail_directory: '%kernel.project_dir%/public/assets/files/blog_thumbnails'
+    blog_thumbnail_directory_name: 'blog_thumbnails/'
+
+    #this code is used for register admin account
+    registration_code: 'tomanyeuem123'
+
+    #show limit blog posts in user page
+    blog_limit_results: 8
+
+    #this params for comment approval. Only approved comment will be show in user page
+    comment_approval: 1
+    comment_reject: 0
+    domain: 'http://blogger.test'
+
+    #this params for email subscriber. Subscribed email will receive notification email from admin
+    email_unsubscribed: 0
+    email_subscribed: 1
+
+    #this params for sending nofitication email whenever new post is published, 1 is already sent, 0 is unsend
+    notification_email_unsend: 0
+    notification_email_sent: 1
+
+    #this params for indentify if comments are approved in 14 days from creating. If not it will be automatically removed
+    comment_approve_deadline: 14
+
+    #timezone
+    timezone: 'Asia/Bangkok'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+    App\Command\ResetTodayViews:
+        tags:
+            - { name: 'console.command', command: 'app:reset:today-views' }
+
+    App\Command\CleanUpComments:
+        tags:
+            - { name: 'console.command', command: 'app:clean-up:comments' }
+
+    # define target directory argument for UploadService
+    App\Services\Admin\UploadService:
+        arguments:
+            $targetDirectory: '%blog_thumbnail_directory%'

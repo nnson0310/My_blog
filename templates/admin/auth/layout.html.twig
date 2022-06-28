@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="description" content="Japanese Blog">
+        <meta name="keywords"
+        content=", Japanese, Blog, Course, Sharing, Inspiration, News">
+        <meta name="author" content="Nguyen Ngoc Son">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+
+        {% block stylesheets %}
+        <!-- Favicon icon -->
+        <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon">
+        <link rel="icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
+
+        <!-- Google font-->
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500,700" rel="stylesheet">
+
+        <!-- Font Awesome -->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+        <!--ico Fonts-->
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/icon/icofont/css/icofont.css') }}">
+
+        <!-- Required Fremwork -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}">
+
+        <!-- Style.css -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/main.css') }}">
+
+        <!-- Responsive.css-->
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
+        {% endblock %}
+
+        {% block javascripts %}
+        <!-- Required Jquery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.7/js/tether.min.js"></script>
+
+        <!-- Required Fremwork -->
+        <script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+
+        <!-- waves effects.js -->
+        <script src="{{ asset('assets/plugins/Waves/waves.min.js') }}"></script>
+
+        <!--text js-->
+        <script type="text/javascript" src="{{ asset('assets/pages/elements.js') }}"></script>
+
+        {% endblock %}
+        <style>
+        h5 {
+			color: red;
+			font-size: 15px;
+			margin: 5px 0px 10px 0px;
+		}
+        {% block style %}
+            {# Child view css #}
+        {% endblock %}
+        </style>
+
+        {% block script %}
+            <script type="text/javascript">
+                history.pushState(null, null, document.URL);
+                    window.addEventListener('popstate', function () {
+                        history.pushState(null, null, document.URL);
+                });
+            </script>
+        {% endblock %}
+    </head>
+
+    {% block body %}
+        <body>
+        </body>
+    {% endblock %}
+</html>

@@ -1,0 +1,128 @@
+{% extends "/admin/dashboard/layout.html.twig" %}
+
+{% block title %}
+	Create News
+{% endblock %}
+
+{% block style %}
+	.card-header-text {
+		font-size: 30px;
+	}
+	.control-label {
+		display: block;
+	    font-size: 20px !important;
+	}
+	.checkbox-inline {
+		margin-right: 15px;
+	}
+    .form-error {
+      	color: #d9534f;
+		margin-top: 20px;
+    }
+{% endblock %}
+
+{% block heading %}
+	<h4>
+		Dashboard
+	</h4>
+	<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_dashboard') }}">
+				<i class="icofont icofont-home"></i>
+			</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_blog_index') }}">Blog Mangament</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="#">Edit</a>
+		</li>
+	</ol>
+{% endblock %}
+
+{% set messages = app.flashes('msg') %}
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-sm-12 text-center">
+							<h5 class="card-header-text">
+								Edit Blog
+							</h5>
+						</div>
+					</div>
+
+					<div class="card-block">
+						<div class="row">
+							<div class="col-sm-2"></div>
+							<div class="col-sm-8 text-center">
+              					{{ form_start(form) }}
+								<div class="form-group">
+									{{ form_label(form.title) }}
+									{{ form_widget(form.title) }}
+									<div class="form-error">
+										{{ form_errors(form.title) }}
+									</div>
+								</div>
+                				<div class="form-group">
+									{{ form_label(form.topics) }}
+									{{ form_widget(form.topics) }}
+									<div class="form-error">
+										{{ form_errors(form.topics) }}
+									</div>
+								</div>
+                				<div class="form-group">
+									{{ form_label(form.tags) }}
+									{{ form_widget(form.tags) }}
+									<div class="form-error">
+										{{ form_errors(form.tags) }}
+									</div>
+								</div>
+								<div class="form-group">
+									{{ form_label(form.description) }}
+									{{ form_widget(form.description) }}
+									<div class="form-error">
+										{{ form_errors(form.description) }}
+									</div>
+								</div>
+                				<div class="form-group">
+									{{ form_label(form.thumbnail) }}
+									{{ form_widget(form.thumbnail) }}
+								{# 	<div class="form-error">
+										{{ form_errors(form.thumbnail) }}
+									</div> #}
+								</div>
+                				<div class="form-group">
+									{{ form_label(form.content) }}
+									{{ form_widget(form.content) }}
+									<div class="form-error">
+										{{ form_errors(form.content) }}
+									</div>
+								</div>
+								<div class="form-group">
+									{{ form_label(form.min_read) }}
+									{{ form_widget(form.min_read) }}
+									<div class="form-error">
+										{{ form_errors(form.min_read) }}
+									</div>
+								</div>
+								<button type="submit" class="btn btn-primary">Update</button>
+								{{ form_end(form) }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% include "/admin/dashboard/modals/notification_modal.html.twig" %}
+
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}

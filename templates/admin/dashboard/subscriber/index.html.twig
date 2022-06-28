@@ -1,0 +1,140 @@
+{% extends "/admin/dashboard/layout.html.twig" %}
+
+{% block title %}
+	Subscriber List
+{% endblock %}
+
+{% block style %}
+	.icofont-send-mail, .icofont-close-circled, .icofont-check-circled {
+		font-size: 30px;
+	}
+
+	th {
+		text-align: center
+	}
+
+	a.disabled {
+		pointer-events: none;
+		cursor: default;
+		opacity: 0.5;
+	}
+{% endblock %}
+
+{% block heading %}
+	<h4>
+		Dashboard
+	</h4>
+	<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_dashboard') }}">
+				<i class="icofont icofont-home"></i>
+			</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_subscriber_index') }}">Subscriber</a>
+		</li>
+	</ol>
+{% endblock %}
+
+{% set messages = app.flashes('msg') %}
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-block">
+						<div class="row">
+							<div class="col-sm-12 table-responsive">
+								<table class="table table-hover table-md table-striped text-center">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>Subscriber</th>
+											<th>Thank For Subscription</th>
+											<th>Subscription Day</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% if (subscribers and subscribers.getTotalItemCount > 0) %}
+											{% for index, subscriber in subscribers %}
+												<tr>
+													<td>{{ subscribers.getItemNumberPerPage * (subscribers.getCurrentPageNumber - 1) + index + 1 }}</td>
+													<td>
+														{{ subscriber.getEmail() }}</td>
+													{% if subscriber.getSubscribed() == 0 %}
+													<td><i class="icofont icofont-close-circled"></i></td>
+													{% else %}
+													<td><i class="icofont icofont-check-circled"></td>
+													{% endif %}
+													<td>
+														{{ subscriber.getCreatedAt()|date('d/m/Y') }}</td>
+													<td>
+														<a  class="send_email_trigger {% if (subscriber.getSubscribed == 1) %} disabled {% endif %}" data-subscriber-id="{{ subscriber.getId() }}" href="javascript::void(0)" data-toggle="modal" data-target="#sendEmail">
+															<i class="icofont icofont-send-mail"></i>
+														</a>
+													</td>
+												</tr>
+											{% endfor %}
+										{% else %}
+											<tr class="text-center">
+												<td colspan="5">No record found.</td>
+											</tr>
+										{% endif %}
+									</tbody>
+								</table>
+								{# Page pagination #}
+								<div class="row">
+									<div class="text-center" style="margin-top: 30px">
+										{{ knp_pagination_render(subscribers) }}
+									</div>
+								</div>
+								{# End pagination #}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	{% include "/admin/dashboard/modals/notification_modal.html.twig" %}
+
+	{# Confirm modal #}
+	<div class="modal fade" id="sendEmail" tabindex="-1" role="dialog" aria-labelledby="alertModal" aria-hidden="true">
+	<div class="modal-dialog modal-md modal-dialog-centered" role="document">
+		<div class="modal-content text-center">
+		<div class="modal-header" style="background-color: #007bff">
+		</div>
+		<div class="modal-body">
+		Do you want to send notification email to this subscribed email?
+		</div>
+		<form action="{{ path('admin_subscriber_send_subscription_email') }}" method="POST">
+			<div class="modal-footer text-center">
+				<input type="hidden" name="_token" value="{{ csrf_token('send_subscription_email') }}"/>
+				<input type="hidden" id="subscriber_id" name="subscriber_id"> 
+				<button style="margin-right: 10px" type="submit" class="btn btn-primary">Send</button>
+				<button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+			</div>
+		</form>
+		</div>
+	</div>
+	</div>
+
+
+{% endblock %}
+
+{% block script %}
+	{% if messages %}
+		<script>
+			$("#notify-modal").modal("show");
+		</script>
+	{% endif %}
+
+	<script>
+		$(".send_email_trigger").on("click", function(e) {
+			const trigger = $(this);
+			const subscriberId = trigger.data('subscriber-id');
+			$("#subscriber_id").val(subscriberId);
+		})
+	</script>
+{% endblock %}

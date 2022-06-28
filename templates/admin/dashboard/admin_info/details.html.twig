@@ -1,0 +1,175 @@
+{% extends '/admin/dashboard/layout.html.twig' %}
+
+{% block title %}
+	Admin Profile Details
+{% endblock %}
+
+{% block style %}
+	  small {
+			font-size: 15px;
+		}
+		#avatar-img {
+			width: 250px;
+			height: 250px;
+	    margin-top: 30px;
+			border: 2px solid #39944E;
+		}
+	  @media only screen and (max-width: 600px) {
+	    #avatar-img {
+	      width: 80%;
+			  height: 80%;
+	      margin-bottom: 15px;
+	      margin-left: 30px;
+	    }
+	  }
+{% endblock %}
+
+{% block heading %}
+	<h4>
+		Dashboard
+	</h4>
+	<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_dashboard') }}">
+				<i class="icofont icofont-home"></i>
+			</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a>Admin Profile</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a>Details</a>
+		</li>
+	</ol>
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-block">
+					<div class="md-card-block">
+						<form method="POST" action="{{ path('admin_info_update') }}" enctype="multipart/form-data">
+							<input type="hidden" name="_token" value="{{ csrf_token('update_admin_info') }}"/>
+							<div class="col-md-8">
+								<div
+									class="row">
+									{# form #}
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="email" class="form-control-label">
+												Email
+											</label>
+											<div class="input-group">
+												<span class="input-group-addon">
+													<i class="icofont icofont-email"></i>
+												</span>
+												<input type="email" class="form-control" aria-describedby="email" placeholder="Email" name="email" {% if (admin) %} value="{{ admin.email }}" {% endif %}/>
+											</div>
+											{% for msg in app.flashes('email') %}
+												<small class="form-text text-muted text-danger">
+													{{ msg }}
+												</small>
+											{% endfor %}
+										</div>
+									</div>
+
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="username" class="form-control-label">
+												Username
+											</label>
+											<div class="input-group">
+												<span class="input-group-addon">
+													<i class="icofont icofont-ui-user"></i>
+												</span>
+												<input type="text" class="form-control" aria-describedby="username" placeholder="Username" name="username" {% if (admin) %} value="{{ admin.username }}" {% endif %}/>
+											</div>
+											{% for msg in app.flashes('username') %}
+												<small class="form-text text-muted text-danger">
+													{{ msg }}
+												</small>
+											{% endfor %}
+										</div>
+									</div>
+
+									<div class="col-md-12">
+										<div class="form-group">
+											<label for="password" class="form-control-label">
+												Password
+											</label>
+											<div class="input-group">
+												<span class="input-group-addon">
+													<i class="fa fa-key"></i>
+												</span>
+												<input type="password" class="form-control" aria-describedby="password" placeholder="Password" name="password" id="password"/>
+												<span class="input-group-addon">
+													<i id="password-icon" class="fa fa-eye-slash"></i>
+												</span>
+											</div>
+											{% for msg in app.flashes('password') %}
+												<small class="form-text text-muted text-danger">
+													{{ msg }}
+												</small>
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+								{# end form #}
+							</div>
+							{# Image Avatar #}
+							<div class="col-md-3 offset-md-1">
+								<div style="display: none" class="avatar col-md-4">
+									<label for="avatar">Upload</label>
+									<input type="file" name="avatar" id="file" accept="image/*" onchange="document.getElementById('avatar-img').src = window.URL.createObjectURL(this.files[0])"/>
+								</div>
+								<div class="avatar" onclick="selectImg()">
+								<img id="avatar-img" class="img-circle" {% if (admin.avatar) %} src="{{ asset('/assets/files/admin_info/'~admin.avatar) }}" {% else %} src="{{ asset('/assets/files/admin_info/admin-avatar.png') }}" {% endif %}/>
+								</div>
+							</div>
+							{# End Image #}
+							<div class="row" style="margin-bottom: 10px">
+								<div class="col-md-12">
+									{% for msg in app.flashes('msg') %}
+										<div class="text-center">
+											<h5 class="form-text text-muted text-danger">
+												{{ msg }}
+											</h5>
+										</div>
+									{% endfor %}
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="text-center">
+										<button type="submit" class="btn btn-success waves-effect waves-light">
+											Update Profile
+										</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+<script>
+	function selectImg () { document.getElementById('file').click(); }
+	  $('#password-icon').on('click', function () {
+	      if ($('#password').attr('type') == 'password') {
+	        $(this).removeClass('fa fa-eye-slash');
+	        $(this).addClass('fa fa-eye');
+	        $('#password').attr('type', 'text');
+	      }
+	      else {
+	        $(this).removeClass('fa fa-eye');
+	        $(this).addClass('fa fa-eye-slash');
+	        $('#password').attr('type', 'password');
+	      }
+	  })
+</script>
+{% endblock %}

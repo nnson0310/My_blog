@@ -1,0 +1,183 @@
+{% extends "/admin/dashboard/layout.html.twig" %}
+
+{% block title %}
+	Create News
+{% endblock %}
+
+{% block style %}
+	.card-header-text {
+		font-size: 30px;
+	}
+	.control-label {
+		display: block;
+		font-size: 20px !important;
+	}
+	.checkbox-inline {
+		margin-right: 15px;
+	}
+	.form-error {
+		color: #d9534f;
+		margin-top: 10px;
+	}
+	#thumbnail {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;	
+		margin-bottom: 10px;
+		align-items: center;
+	}
+	#thumbnail span {
+		border: 1px solid #ccc;
+		padding: 10px;
+		position : relative;
+		width: 400px;
+		object-fit: cover; 
+		height: 300px;
+		justify-content: center;
+		display: flex;
+		align-items: center;
+	}
+	#thumbnail img {
+		width: 70%;
+	}
+{% endblock %}
+
+{% block heading %}
+	<h4>
+		Dashboard
+	</h4>
+	<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_dashboard') }}">
+				<i class="icofont icofont-home"></i>
+			</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a>Blog Mangament</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_blog_create_form') }}">Create</a>
+		</li>
+	</ol>
+{% endblock %}
+
+{% set messages = app.flashes('msg') %}
+{% set errors = app.flashes('error') %}
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-sm-12 text-center">
+							<h5 class="card-header-text">
+								Create New Blog
+							</h5>
+						</div>
+					</div>
+
+					<div class="card-block">
+						<div class="row">
+							<div class="col-sm-2"></div>
+							<div class="col-sm-8 text-center">
+								{{ form_start(form) }}
+								<div class="form-group">
+									{{ form_label(form.title) }}
+									{{ form_widget(form.title) }}
+									<div class="form-error">
+										{{ form_errors(form.title) }}
+									</div>
+								</div>
+								<div class="form-group">
+									{{ form_label(form.topics) }}
+									{{ form_widget(form.topics) }}
+									<div class="form-error">
+										{{ form_errors(form.topics) }}
+									</div>
+								</div>
+								<div class="form-group">
+									{{ form_label(form.tags) }}
+									{{ form_widget(form.tags) }}
+									<div class="form-error">
+										{{ form_errors(form.tags) }}
+									</div>
+								</div>
+								<div class="form-group">
+									{{ form_label(form.description) }}
+									{{ form_widget(form.description) }}
+									<div class="form-error">
+										{{ form_errors(form.description) }}
+									</div>
+								</div>
+								<div class="form-group">
+									{{ form_label(form.thumbnail) }}
+									<div class="text-center" id="thumbnail">
+										<span style=""><img id="preview_image" src="{{ asset('assets/images/250x250-Placeholder.png') }}"></span>
+									</div>
+									{{ form_widget(form.thumbnail) }}
+									<div class="form-error">
+										{% if errors %}
+											{% for error in errors %}
+												{{ error }}
+											{% endfor %}
+										{% else %}
+											{{ form_errors(form.thumbnail) }}
+										{% endif %}
+									</div>
+								</div>
+								<div class="form-group">
+									{{ form_label(form.content) }}
+									{{ form_widget(form.content) }}
+									<div class="form-error">
+										{{ form_errors(form.content) }}
+									</div>
+								</div>
+								<div class="form-group">
+									{{ form_label(form.min_read) }}
+									{{ form_widget(form.min_read) }}
+									<div class="form-error">
+										{{ form_errors(form.min_read) }}
+									</div>
+								</div>
+								<button type="submit" class="btn btn-primary">Create</button>
+								{{ form_end(form) }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% include "/admin/dashboard/modals/notification_modal.html.twig" %}
+
+{% endblock %}
+
+{% block script %}
+
+{% if messages %}
+	<script>
+		$("#notify-modal").modal("show");
+	</script>
+{% endif %}
+
+<script>
+
+//preview image before uploading
+function readURL(input) {
+	if (input.files && input.files[0]) {
+		const reader = new FileReader();
+		reader.onload = function(e) {
+			$('#preview_image').attr('src', e.target.result);
+		}
+    	reader.readAsDataURL(input.files[0]);
+	}
+}
+
+$('#blog_thumbnail').on('change', function () {
+	readURL(this);
+})
+</script>
+
+{% endblock %}

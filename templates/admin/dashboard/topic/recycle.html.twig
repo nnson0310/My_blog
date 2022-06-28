@@ -1,0 +1,114 @@
+{% extends "/admin/dashboard/layout.html.twig" %}
+
+{% block title %}
+	Topic Recycle
+{% endblock %}
+
+{% block style %}
+	.btn-save {
+		color: #fff;
+		background-color: #007bff;
+	}
+	.btn-save:hover {
+		color: #373a3c;
+	}
+	a:focus {
+		color: none;
+		}
+{% endblock %}
+
+{% block heading %}
+	<h4>
+		Dashboard
+	</h4>
+	<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_dashboard') }}">
+				<i class="icofont icofont-home"></i>
+			</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a>Recycle</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_topic_recycle') }}">Topic</a>
+		</li>
+	</ol>
+{% endblock %}
+
+{% set messages = app.flashes('msg') %}
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-block">
+						<div class="row">
+							<div class="col-sm-12 table-responsive">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>Name</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% if (topics and topics.getTotalItemCount > 0) %}
+											{% for index, topic in topics %}
+												<tr>
+													<td>{{ topics.getItemNumberPerPage * (topics.getCurrentPageNumber - 1) + index + 1 }}</td>
+													<td><i class="fa fa-weibo" aria-hidden="true"></i> {{ topic.getName() }}</td>
+													<td>
+														<span style="margin-left: 15px">
+															<a id="showRecycleModal" data-toggle="modal" data-target="#recycle-modal" data-topic-id="{{ topic.getId() }}">
+																<i class="icofont icofont-recycle"></i>
+															</a>
+														</span>
+													</td>
+												</tr>
+											{% endfor %}
+										{% else %}
+											<tr class="text-center">
+												<td colspan="3">No record found.</td>
+											</tr>
+										{% endif %}
+									</tbody>
+								</table>
+								{# Page pagination #}
+								<div class="row">
+									<div class="text-center" style="margin-top: 30px">
+										{{ knp_pagination_render(topics) }}
+									</div>
+								</div>
+								{# End pagination #}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% include "admin/dashboard/modals/topic/recycle_modal.html.twig" %}
+		{% include "admin/dashboard/modals/notification_modal.html.twig" %}
+
+	{% endblock %}
+
+	{% block script %}
+		{# Show success message  #}
+		{% if messages %}
+			<script>
+				$('#notify-modal').modal('show');
+			</script>
+		{% endif %}
+
+		<script>
+			//pass id to recycle modal
+			$('#recycle-modal').on('show.bs.modal', function (event) {
+				var trigger = $(event.relatedTarget);
+				var topicId = trigger.data('topic-id');
+				var modal = $(this);
+				modal.find('#topic-id').val(topicId);
+			});
+		</script>
+	{% endblock %}

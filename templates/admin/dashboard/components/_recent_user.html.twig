@@ -1,0 +1,8 @@
+{# Show recent user in admin dashboard #}
+<a href="#!" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle drop icon-circle drop-image">
+	<span><img class="img-circle " {% if (admin.avatar) %} src="{{ asset('/assets/files/admin_info/'~admin.avatar) }}" {% else %} src="{{ asset('/assets/files/admin_info/admin-avatar.png') }}" {% endif %} style="width:40px; height: 40px" alt="User Image"></span>
+	<span>
+		<b>{{ username }}</b>
+		<i class="icofont icofont-simple-down"></i>
+	</span>
+</a>

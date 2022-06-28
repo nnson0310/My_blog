@@ -1,0 +1,5 @@
+framework:
+    mailer:
+        dsn: '%env(MAILER_DSN)%'
+        envelope:
+            sender: 'nson03101993@gmail.com'

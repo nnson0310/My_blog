@@ -1,0 +1,253 @@
+{% extends "/admin/dashboard/layout.html.twig" %}
+
+{% block title %}
+	Comment List
+{% endblock %}
+
+{% block style %}
+	.table th {
+		text-align: center;
+	}
+
+	.comment_content, .post {
+		margin-top: 0px;
+		text-decoration: underline !important;
+		color: #2196f3 !important;
+	}
+
+	dt {
+		margin-bottom: 10px;
+	}
+
+	.comment {
+		border: 1px solid rgba(0, 0, 0, .15);
+		border-radius: .25rem;
+		background-color: #eceeef;
+		opacity: 1;
+		padding: .5rem .75rem;
+	}
+{% endblock %}
+
+{% block heading %}
+	<h4>
+		Dashboard
+	</h4>
+	<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_dashboard') }}">
+				<i class="icofont icofont-home"></i>
+			</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_comment_index') }}">Comment</a>
+		</li>
+	</ol>
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-block">
+						<div class="row">
+							<div class="col-sm-12 table-responsive">
+								<table class="table table-hover table-striped text-center">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>Comment</th>
+											<th>Name</th>
+											<th>Posted At</th>			
+											<th>Approval</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% if (comments and comments.getTotalItemCount > 0) %}
+											{% for index, comment in comments  %}
+												<tr>
+													<td>{{ comments.getItemNumberPerPage * (comments.getCurrentPageNumber - 1) + index + 1 }}</td>
+													<td class="comment_content">
+														<a data-toggle="modal" 
+														data-domain="{{ domain }}"
+														data-target="#comment_details" 
+														data-comment="{{ comment.getContent() }}"
+														data-name="{{ comment.getName() }}"
+														data-email="{{ comment.getEmail() }}"
+														data-website="{{ comment.getWebsite() }}"
+														data-post="{{ comment.getBlog().title }}"
+														data-post-id="{{ comment.getBlog().id }}"
+														>
+															{{ comment.getContent()|slice(0,10)|raw }}...
+														</a>
+													</td>
+													<td>{{ comment.getName() }}</td>
+													<td>{{ comment.getCreatedAt()|date('d/m/Y') }}</td>
+													{% if comment.getApproval() == 0 %}
+														<td class="emoji-frown">
+															<a onclick="approvalComment({{ comment.getId() }})" ><i class="fa fa-frown-o fa-lg" aria-hidden="true"></i></a>
+														</td>
+													{% else %}
+														<td class="emoji-smile">
+															<a onclick="rejectComment({{ comment.getId() }})" class="approval"><i class="fa fa-smile-o fa-lg" aria-hidden="true"></i></a>
+														</td>
+													{% endif %}
+													<td>
+														<span>
+															<a id="showDeleteModal" data-toggle="modal" data-target="#delete-modal" data-comment-id="{{ comment.getId() }}">
+																<i class="icofont icofont-ui-delete"></i>
+															</a>
+														</span>
+														<span style="margin-left: 15px">
+															<a id="showEditModal" data-toggle="modal" data-target="#edit-modal" data-comment-id="{{ comment.getId() }}">
+																<i class="icofont icofont-ui-edit"></i>
+															</a>
+														</span>
+													</td>
+												</tr>
+											{% endfor %}
+										{% else %}
+											<tr class="text-center">
+												<td colspan="6">No record found.</td>
+											</tr>
+										{% endif %}
+										</tbody>
+									</tbody>
+								</table>
+								{# Page pagination #}
+								<div class="row">
+									<div class="text-center" style="margin-top: 30px"></div>
+								</div>
+								{# End pagination #}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{# Notification Modal #}
+		<div class="modal fade" id="notify-modal" tabindex="-1" role="dialog" aria-labelledby="alertModal" aria-hidden="true">
+		<div class="modal-dialog modal-md modal-dialog-centered" role="document">
+			<div class="modal-content text-center">
+			<div class="modal-header" style="background-color: #007bff">
+			</div>
+			<div class="modal-body">
+				<h5 id="message"><h5>
+				</div>
+				<div class="modal-footer text-center">
+					<button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+		</div>
+
+		{# Comment Details #}
+		<div id="comment_details" tabindex="-1" role="dialog" aria-labelledby="check-label" class="modal fade" aria-modal="true">
+			<div role="document" class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Comment Details</h5>
+						<button type="button" data-dismiss="modal" aria-label="Close" class="close" style="margin-top: -30px !important">
+							<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<dl>
+							<dt>Blog Post:</dt>
+							<dd><a class="post"></a></dd>
+							<dt>Comment:</dt>
+							<dd class="comment"></dd>
+							<dt>Name:</dt>
+							<dd><input type="text" class="form-control name" disabled="true"></dd>
+							<dt>Email:</dt>
+							<dd><input type="email" class="form-control email" disabled="true"></dd>
+							<dt>Website:</dt>
+							<dd><input type="text" class="form-control website" disabled="true"></dd>
+						</dl>
+					</div>
+					<div class="modal-footer">
+						<button data-dismiss="modal" class="btn btn-primary btn-onfirm" type="button">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endblock %}
+
+	{% block script %}
+		<script>
+
+		{# Approval Comment #}
+			function approvalComment(id) {
+				const path = 'approval';
+				$.ajax({
+					type: 'POST',
+					url: path,
+					data: {
+						id: id
+					},
+					dataType: 'json'
+				}).done(function (result) {
+					$('#message').append(result['msg']);
+					$('#notify-modal').modal('show');
+					setTimeout(() => {
+						location.reload();
+					}, 2000);
+				}).fail(function () {
+					console.log('Ajax failed!');
+				});
+			}
+		{# Reject comment #}
+			function rejectComment(id) {
+				const path = 'reject';
+				$.ajax({
+					type: 'POST',
+					url: path,
+					data: {
+						id: id
+					},
+					dataType: 'json'
+				}).done(function (result) {
+					$('#message').append(result['msg']);
+					$('#notify-modal').modal('show');
+					setTimeout(() => {
+						location.reload();
+					}, 2000);
+				}).fail(function () {
+					console.log('Ajax failed!');
+				});
+			}
+		
+		//show comment details modal
+			$('#comment_details').on('shown.bs.modal', function (e) {
+				const trigger = $(e.relatedTarget);
+				const comment = trigger.data('comment');
+				const post = trigger.data('post');
+				const postId = trigger.data('post-id');
+				const postUrl = trigger.data('domain') + postId ;
+				const name = trigger.data('name');
+				const email = trigger.data('email');
+				let website = trigger.data('website');
+				if (website == '' || website == null) {
+					website = 'No website available';
+				}
+
+				//append content to modal
+				$('.post').text(post)
+				$('.post').attr('href', postUrl);
+				$('.comment').html(comment);
+				$('.email').val(email);
+				$('.name').val(name);
+				$('.website').val(website);
+			})
+
+			//make browser open new tab rather than reload page
+			$('.post').on('click', function(e) {
+				e.preventDefault();
+				var url = $(this).attr('href');
+				window.open(url, '_blank');
+			});
+
+		</script>
+	{% endblock %}

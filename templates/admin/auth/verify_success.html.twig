@@ -1,0 +1,67 @@
+{% extends 'admin/auth/layout.html.twig' %}
+
+{% block title %}
+	Register Success
+{% endblock %}
+
+{% block style %}
+	.content p, li {
+		    font-size: 15px;
+	      color: #666;
+	}
+	.content ul {
+	    list-style-type: disc;
+	  	padding-left: 10px;
+	}
+	p span {
+	    font-size: 20px;
+	    color: #00b9f5;
+	}
+	.login-card {
+	    width: 700px;
+	}
+	@media only screen and (max-width: 600px) {
+		.login-card {
+		    width: 100%;
+		}
+	}
+	h2 {
+		border-bottom: 1px solid #ececec;
+		color: #D3262A;
+		text-align: center;
+		margin-bottom: 20px;
+		padding-bottom: 30px;
+	}
+{% endblock %}
+
+{% block body %}
+	<body>
+		<section
+			class="login common-img-bg">
+			<!-- Container-fluid starts -->
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="login-card card-block bg-white">
+							<h2>Thank you for confirming email.</h2>
+							<div class="content">
+								<p>Now the account
+									<span>
+										<b>{{ app.session.get('userEmail') }}</b>
+									</span>
+									is actived.
+								</p>
+								<p>Note: If you have any question about the account, please do not hestitate to contact us anytime.</p>
+								<p>You can click <a href="{{ path('admin_dashboard') }}">here</a> to go to admin dashboard.</p>
+							</div>
+						</div>
+						<!-- end of login-card -->
+					</div>
+					<!-- end of col-sm-12 -->
+				</div>
+				<!-- end of row-->
+			</div>
+			<!-- end of container-fluid -->
+		</section>
+	</body>
+{% endblock %}

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+		<meta name="description" content="Japanese Blog">
+		<meta name="keywords" content=", Japanese, Blog, Course, Sharing, Inspiration, News">
+		<meta name="author" content="Nguyen Ngoc Son">
+		<title>
+			{% block title %}
+				Welcome!
+			{% endblock %}
+		</title>
+
+		{% block javascripts %}
+			<!-- Required Jqurey -->
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.7/js/tether.min.js"></script>
+
+			<!-- Required Framework -->
+			<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+
+			<!-- Scrollbar JS-->
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+
+			<!--classic JS-->
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/classie/1.0.1/classie.min.js"></script>
+
+			<!-- notification -->
+			<script src="{{ asset('assets/plugins/notification/js/bootstrap-growl.min.js') }}"></script>
+
+			<!-- Sparkline charts -->
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.min.js"></script>
+
+			<!-- Counter js  -->
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/3.0.0/jquery.waypoints.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
+
+			<!-- Echart js -->
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.2.2/echarts.min.js"></script>
+
+			<script src="https://code.highcharts.com/highcharts.js"></script>
+			<script src="https://code.highcharts.com/modules/exporting.js"></script>
+			<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+
+			<!-- custom js -->
+			<script type="text/javascript" src="{{ asset('assets/js/main.min.js') }}"></script>
+			<script type="text/javascript" src="{{ asset('assets/pages/dashboard.js') }}"></script>
+			<script type="text/javascript" src="{{ asset('assets/pages/elements.js') }}"></script>
+			<script src="{{ asset('assets/js/menu.min.js') }}"></script>
+
+		{% endblock %}
+
+		{% block stylesheets %}
+			<!-- Favicon icon -->
+			<link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon">
+			<link rel="icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon">
+
+			<!-- Google font-->
+			<link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500,700" rel="stylesheet">
+
+			{# <!-- themify -->
+			<link rel="stylesheet" type="text/css" href="{{ asset('assets/icon/themify-icons/themify-icons.css') }}"> #}
+
+			<!-- Font Awesome -->
+			<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+			<!--ico Fonts-->
+			<link rel="stylesheet" type="text/css" href="{{ asset('assets/icon/icofont/css/icofont.css') }}">
+
+			<!-- simple line icon -->
+			<link rel="stylesheet" type="text/css" href="{{ asset('assets/icon/simple-line-icons/css/simple-line-icons.css') }}">
+
+			<!-- Required Fremwork -->
+			<link rel="stylesheet" type="text/css" href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}">
+
+			<!-- Chartlist chart css -->
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.0/chartist.min.css" type="text/css" media="all">
+
+			{# <!-- Weather css -->
+			<link href="{{ asset('assets/css/svg-weather.css') }}" rel="stylesheet"> #}
+
+			<!-- Style.css -->
+			<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/main.css') }}">
+
+			<!-- Responsive.css-->
+			<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
+		{% endblock %}
+
+
+		<style>
+			#morphsearch-search {
+					border-radius: 10px;
+			}
+			#search-button {
+					background: #39444e;
+					border: none;
+					color: #f6f6f6;
+			}
+			.able-logo {
+				width: 70px;
+				height: 50px;
+			}
+			input:focus::placeholder {
+				color: transparent;
+			}
+			.img-circle {
+				background-color: #F1F1F1;
+			}
+			.modal-content {
+				color: #6c757d !important;
+			}
+
+			#search-header {
+				display: flex;
+				justify-content: center;
+				margin-top: 7px;
+			}
+		{% block style %}
+		{# Style for child view #}
+		{% endblock %}
+		</style>
+
+	</head>
+
+	<body class="sidebar-mini fixed">
+		<div class="loader-bg">
+			<div class="loader-bar"></div>
+		</div>
+		<div
+			class="wrapper">
+			<!-- Navbar-->
+			<header class="main-header-top hidden-print">
+				<a href="{{ path('admin_dashboard') }}" class="logo"><img class="img-fluid able-logo" src="{{ asset('assets/images/logo.png') }}" alt="Theme-logo"></a>
+				<nav
+					class="navbar navbar-static-top">
+					<!-- Sidebar toggle button-->
+					<a href="#" data-toggle="offcanvas" class="sidebar-toggle"></a>
+					<ul class="top-nav lft-nav">
+					<form action="{{ path('admin_blog_search') }}" id="search-form" method="GET">
+						<li id="search-header" class="dropdown pc-rheader-submenu message-notification search-toggle">		
+							{# <input type="hidden" name="_token" value="{{ csrf_token("search") }}"> #}
+							{# <input type="hidden" name="whatPage" value="{{ app.session.get('whatPage') }}"> #}
+							<input class="form-control" id="morphsearch-search" type="search" name="keyword" placeholder="Input keywords...">
+							<button type="submit" style="margin-left: 5px; border-radius: 5px" class="btn btn-primary">
+								<i aria-hidden="true" class="fa fa-lg fa-search"></i>
+							</button>		
+						</li>
+					</form>
+					</ul>	
+					<!-- Navbar Right Menu-->
+					<div class="navbar-custom-menu f-right">
+						<ul
+							class="top-nav">
+							<!--Notification Menu-->
+
+							<li class="dropdown notification-menu">
+								<a href="#" data-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+									<i class="icon-bell"></i>
+									<span class="badge badge-danger header-badge">9</span>
+								</a>
+								<ul class="dropdown-menu">
+									<li class="not-head">You have
+										<b class="text-primary">4</b>
+										new notifications.</li>
+									<li class="bell-notification">
+										<a href="javascript:;" class="media">
+											<span class="media-left media-icon">
+												<img class="img-circle" src="{{ asset('assets/images/avatar-1.png') }}" alt="User Image">
+											</span>
+											<div class="media-body">
+												<span class="block">Lisa sent you a mail</span>
+												<span class="text-muted block-time">2min ago</span>
+											</div>
+										</a>
+									</li>
+									<li class="not-footer">
+										<a href="#">See all notifications.</a>
+									</li>
+								</ul>
+							</li>
+							<!-- chat dropdown -->
+							<li class="pc-rheader-submenu ">
+								<a href="#" class="drop icon-circle displayChatbox">
+									<i class="icon-bubbles"></i>
+									<span class="badge badge-danger header-badge">5</span>
+								</a>
+
+							</li>
+							<!-- email dropdown -->
+							<li class="pc-rheader-submenu ">
+								<a href="#" class="drop icon-circle displayChatbox">
+									<i class="icofont icofont-envelope"></i>
+									<span class="badge badge-danger header-badge">5</span>
+								</a>
+
+							</li>
+							<!-- window screen -->
+							<li class="pc-rheader-submenu">
+								<a href="#" class="drop icon-circle" onclick="javascript:toggleFullScreen()">
+									<i class="icon-size-fullscreen"></i>
+								</a>
+
+							</li>
+							<!-- User Menu-->
+							<li class="dropdown">
+								{{ render(controller('App\\Controller\\Admin\\DashboardController::recentUser')) }}
+								<ul class="dropdown-menu settings-menu">
+									<li>
+										<a href="#!">
+											<i class="icon-settings"></i>
+											Settings
+										</a>
+									</li>
+									<li>
+										<a href="{{ path('admin_info_details') }}">
+										<i class="icon-user"></i>
+											Profile
+										</a>
+									</li>
+									<li>
+										<a href="#">
+											<i class="icon-envelope-open"></i>
+											My Messages
+										</a>
+									</li>
+									<li class="p-0">
+										<div class="dropdown-divider m-0"></div>
+									</li>
+									<li>
+										<a href="{{ path('admin_auth_logout') }}">
+											<i class="icon-logout"></i>
+											Logout</a>
+									</li>
+
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</body>
+</html></header><!-- Side-Nav--><aside class="main-sidebar hidden-print ">
+<section
+	class="sidebar" id="sidebar-scroll">
+	<!-- Sidebar Menu-->
+	<ul class="sidebar-menu">
+		<li class="nav-level">--- Main Page ---</li>
+		<li class="active treeview">
+			<a class="waves-effect waves-dark" href="{{ path('admin_dashboard') }}">
+				<i class="icon-speedometer"></i>
+				<span>Dashboard</span>
+			</a>
+		</li>
+		<li class="nav-level">--- Master Management ---</li>
+		<li class="treeview">
+			<a class="waves-effect waves-dark" href="#">
+				<i class="icofont icofont-database"></i>
+				<span>Master Data</span>
+				<i class="icon-arrow-down"></i>
+			</a>
+			<ul class="treeview-menu">
+				<li>
+					<a class="waves-effect waves-dark" href="{{ path('admin_category_index') }}">
+						<i class="icon-arrow-right"></i>
+					<i class="fa fa-list-alt" aria-hidden="true"></i> Category
+					</a>
+				</li>
+				<li>
+					<a class="waves-effect waves-dark" href="{{ path('admin_topic_index') }}">
+						<i class="icon-arrow-right"></i>
+					<i class="fa fa-weibo" aria-hidden="true"></i> Topic
+					</a>
+				</li>
+				<li>
+					<a class="waves-effect waves-dark" href="{{ path('admin_tags_index') }}">
+						<i class="icon-arrow-right"></i>
+					<i class="icofont icofont-tags" aria-hidden="true"></i> Tags
+					</a>
+				</li>
+			</ul>
+		</li>
+		{# Recycle bin #}
+		<li class="treeview">
+			<a class="waves-effect waves-dark" href="#">
+			<i class="icofont icofont-bin"></i>
+				<span>Recycle Bin</span>
+				<i class="icon-arrow-down"></i>
+			</a>
+			<ul class="treeview-menu">
+				<li>
+					<a class="waves-effect waves-dark" href="{{ path('admin_category_recycle') }}">
+						<i class="icon-arrow-right"></i>
+					<i class="fa fa-list-alt" aria-hidden="true"></i> Category
+					</a>
+				</li>
+				<li>
+					<a class="waves-effect waves-dark" href="{{ path('admin_topic_recycle') }}">
+						<i class="icon-arrow-right"></i>
+					<i class="fa fa-weibo" aria-hidden="true"></i> Topic
+					</a>
+				</li>
+				<li>
+					<a class="waves-effect waves-dark" href="{{ path('admin_tags_recycle') }}">
+						<i class="icon-arrow-right"></i>
+					<i class="icofont icofont-tags" aria-hidden="true"></i> Tags
+					</a>
+				</li>
+			</ul>
+		</li>
+		<li class="nav-level">--- Blog Management ---</li>
+		<li class="treeview">
+			<a class="waves-effect waves-dark" href="#">
+				<i class="icofont icofont-newspaper"></i>
+				<span>Blog</span>
+				<i class="icon-arrow-down"></i>
+			</a>
+			<ul class="treeview-menu">
+				<li>
+					<a class="waves-effect waves-dark" href="{{ path('admin_blog_index') }}">
+						<i class="icon-arrow-right"></i>
+					<i class="icofont icofont-list" aria-hidden="true"></i> List
+					</a>
+				</li>
+				<li>
+					<a class="waves-effect waves-dark" href="{{ path('admin_blog_recycle') }}">
+						<i class="icon-arrow-right"></i>
+					<i class="icofont icofont-bin" aria-hidden="true"></i> Recycle Bin
+					</a>
+				</li>
+			</ul>
+		</li>
+	<li class="nav-level">--- Comment Management ---</li>
+	<li class="treeview">
+		<a class="waves-effect waves-dark" href="#">
+			<i class="icofont icofont-comment"></i>
+			<span>Comment</span>
+			<i class="icon-arrow-down"></i>
+		</a>
+		<ul class="treeview-menu">
+			<li>
+				<a class="waves-effect waves-dark" href="{{ path('admin_comment_index') }}">
+					<i class="icon-arrow-right"></i>
+				<i class="icofont icofont-list" aria-hidden="true"></i> List
+				</a>
+			</li>
+			<li>
+				<a class="waves-effect waves-dark" href="#">
+					<i class="icon-arrow-right"></i>
+				<i class="icofont icofont-bin" aria-hidden="true"></i> Recycle Bin
+				</a>
+			</li>
+		</ul>
+	</li>
+	<li class="nav-level">--- Message Management ---</li>
+	<li class="treeview">
+		<a class="waves-effect waves-dark" href="#">
+			<i class="icofont icofont-ui-message"></i>
+			<span>Message</span>
+			<i class="icon-arrow-down"></i>
+		</a>
+		<ul class="treeview-menu">
+			<li>
+				<a class="waves-effect waves-dark" href="{{ path('admin_message_index') }}">
+					<i class="icon-arrow-right"></i>
+				<i class="icofont icofont-list" aria-hidden="true"></i> List
+				</a>
+			</li>
+		</ul>
+	</li>
+	<li class="nav-level">--- Subscriber Management ---</li>
+	<li class="treeview">
+		<a class="waves-effect waves-dark" href="#">
+			<i class="fa fa-rocket"></i>
+			<span>Subscriber</span>
+			<i class="icon-arrow-down"></i>
+		</a>
+		<ul class="treeview-menu">
+			<li>
+				<a class="waves-effect waves-dark" href="{{ path('admin_subscriber_index') }}">
+					<i class="icon-arrow-right"></i>
+				<i class="icofont icofont-list" aria-hidden="true"></i> List
+				</a>
+			</li>
+		</ul>
+	</li>
+<li class="nav-level">--- Scrap Data ---</li>
+<li class="treeview">
+	<a class="waves-effect waves-dark" href="#">
+		<i class="icon-briefcase"></i>
+		<span>Edewakaru</span>
+		<i class="icon-arrow-down"></i>
+	</a>
+</li>
+	</ul>
+</section></aside><!-- Sidebar chat start --><div id="sidebar" class="p-fixed header-users showChat">
+<div class="had-container">
+	<div class="card card_main header-users-main">
+		<div class="card-content user-box">
+			<div class="md-group-add-on p-20">
+				<span class="md-add-on">
+					<i class="icofont icofont-search-alt-2 chat-search"></i>
+				</span>
+				<div class="md-input-wrapper">
+					<input type="text" class="md-form-control" name="username" id="search-friends">
+					<label>Search</label>
+				</div>
+
+			</div>
+			<div class="media friendlist-main">
+
+				<h6>Friend List</h6>
+
+			</div>
+			<div class="main-friend-list">
+				<div class="media friendlist-box" data-id="1" data-status="online" data-username="Josephin Doe" data-toggle="tooltip" data-placement="left" title="Josephin Doe">
+
+					<a class="media-left" href="#">
+						<img class="media-object img-circle" src="{{ asset('assets/images/avatar-1.png') }}" alt="Generic placeholder image">
+						<div class="live-status bg-success"></div>
+					</a>
+					<div class="media-body">
+						<div class="friend-header">Josephin Doe</div>
+						<span>20min ago</span>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div></div><div class="showChat_inner">
+<div class="media chat-inner-header">
+	<a class="back_chatBox">
+		<i class="icofont icofont-rounded-left"></i>
+		Josephin Doe
+	</a>
+</div>
+<div class="media chat-messages">
+	<a class="media-left photo-table" href="#">
+		<img class="media-object img-circle m-t-5" src="{{ asset('assets/images/avatar-1.png') }}" alt="Generic placeholder image">
+		<div class="live-status bg-success"></div>
+	</a>
+	<div class="media-body chat-menu-content">
+		<div class="">
+			<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
+			<p class="chat-time">8:20 a.m.</p>
+		</div>
+	</div>
+</div>
+<div class="media chat-messages">
+	<div class="media-body chat-menu-reply">
+		<div class="">
+			<p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
+			<p class="chat-time">8:20 a.m.</p>
+		</div>
+	</div>
+	<div class="media-right photo-table">
+		<a href="#">
+			<img class="media-object img-circle m-t-5" src="{{ asset('assets/images/avatar-2.png') }}" alt="Generic placeholder image">
+			<div class="live-status bg-success"></div>
+		</a>
+	</div>
+</div>
+<div class="media chat-reply-box">
+	<div class="md-input-wrapper">
+		<input type="text" class="md-form-control" id="inputEmail" name="inputEmail">
+		<label>Share your thoughts</label>
+		<span class="highlight"></span>
+		<span class="bar"></span>
+		<button type="button" class="chat-send waves-effect waves-light">
+			<i class="icofont icofont-location-arrow f-20 "></i>
+		</button>
+
+		<button type="button" class="chat-send waves-effect waves-light">
+			<i class="icofont icofont-location-arrow f-20 "></i>
+		</button>
+	</div>
+
+</div></div><!-- Sidebar chat end-->
+<div class="content-wrapper">
+<!-- Container-fluid starts -->
+<!-- Main content starts -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class="main-header">
+			{% block heading %}
+				{# Main heading #}
+			{% endblock %}
+			</div>
+		</div>
+	{% block content %}
+		{# Main Content #}
+	{% endblock %}
+	</div>
+<!-- Main content ends -->
+<!-- Container-fluid ends -->
+	</div>
+</div>
+<script type="text/javascript">
+	var $window = $(window);
+	var nav = $('.fixed-button');
+		$window.scroll(function () {
+			if ($window.scrollTop() >= 200) {
+				nav.addClass('active');
+			} else {
+				nav.removeClass('active');
+		}
+	});
+
+	$("#search-form").on("submit", function(e) {
+		if ($("input[name='keyword']").val().trim() == '' || $("input[name='keyword']").val().trim() == null) {
+			e.preventDefault();
+			alert("Please input keyword first!");
+		}		
+	});
+</script>
+{% block script %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,78 @@
+{% extends 'admin/dashboard/layout.html.twig' %}
+
+{% block title %}
+  Dashboard
+{% endblock %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block heading %}
+	<h4>Dashboard</h4>
+		<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+			<li class="breadcrumb-item">
+				<a href="{{ path('admin_dashboard') }}">
+					<i class="icofont icofont-home"></i>
+				</a>
+			</li>
+			<li class="breadcrumb-item">
+				<a href="{{ path('admin_dashboard') }}">Dashboard</a>
+			</li>
+	</ol>
+{% endblock %}
+
+{% block content %}
+  <!-- 4-blocks row start -->
+  <div class="row dashboard-header">
+    <div class="col-lg-3 col-md-6">
+      <div class="card dashboard-product">
+        <h2><span class="label label-warning"><i class="fa fa-newspaper-o"></i> Total Posts</span></h2>
+        <h2 class="dashboard-total-products">
+          {{ totalPosts }}
+        </h2>
+        <span class="label label-warning"><i class="fa fa-newspaper-o"></i> {{ todayPosts }} Posts</span> Today
+        <div class="side-box">
+          <i class="ti-signal text-warning-color"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="card dashboard-product">
+        <h2><span class="label label-primary"><i class="fa fa-comments"></i> Total Comments</span></h2>
+        <h2 class="dashboard-total-products">
+          {{ totalComments }}
+        </h2>
+        <span class="label label-primary"><i class="fa fa-comments"></i> {{ todayComments }} Comments</span> Today
+        <div class="side-box">
+          <i class="ti-gift text-primary-color"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="card dashboard-product">
+        <h2><span class="label label-success"><i class="fa fa-eye"></i> Total Views</span></h2>
+        <h2 class="dashboard-total-products">
+          {{ totalViews }}
+        </h2>
+        <span class="label label-success"><i class="fa fa-eye"></i> {{ todayViews }} Views</span> Today
+        <div class="side-box">
+          <i class="ti-direction-alt text-success-color"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="card dashboard-product">
+        <h2><span class="label label-danger"><i class="fa fa-users"></i> Total Subscribers</span></h2>
+        <h2 class="dashboard-total-products">
+          {{ totalSubscribers }}
+        </h2>
+        <span class="label label-danger"><i class="fa fa-users"></i> {{ todaySubscribers }} Subscribers</span> Today
+        <div class="side-box">
+          <i class="ti-rocket text-danger-color"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 4-blocks row end -->
+{% endblock %}

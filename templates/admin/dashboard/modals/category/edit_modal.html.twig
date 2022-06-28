@@ -1,0 +1,39 @@
+<div class="modal" id="edit-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">Edit Category</h4>
+			</div>
+			<!-- Modal body -->
+			<div class="modal-body">
+				<form action="{{ path('admin_category_update') }}" id="edit-form" method="POST">
+          			<input type="hidden" name="_token" value="{{ csrf_token('update_category') }}">
+					<input type="hidden" name="cat_id" id="cat-id">
+					<div class="form-group">
+						<label for="cat_name">Name</label>
+						<input class="form-control" type="text" name="cat_name" id="cat-name" {% if app.session.get('cat_name') %} value="{{ app.session.get('cat_name') }}" {% endif %}>
+						{% for msg in edit_error_name %}
+							<small class="form-text text-muted text-danger">
+								{{ msg }}
+							</small>
+						{% endfor %}
+					</div>
+					<div class="form-group">
+						<label for="cat_desc">Description</label>
+						<textarea class="form-control" name="cat_desc" id="cat-desc">{% if app.session.get('cat_desc') %} {{ app.session.get('cat_desc') }} {% endif %}</textarea>
+						{% for msg in edit_error_desc %}
+							<small class="form-text text-muted text-danger">
+								{{ msg }}
+							</small>
+						{% endfor %}
+					</div>
+					<diV class="text-center">
+						<button type="button" class="btn btn-success float-left" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary" id="btnUpdateSubmit">Update</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

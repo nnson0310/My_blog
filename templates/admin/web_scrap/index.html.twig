@@ -1,0 +1,17 @@
+{% extends "/admin/dashboard/layout.html.twig" %}
+
+{% block content %}
+	<div>
+		<form method="POST" action="{{ path('admin_web_github_scrap') }}">
+			<div class="form-group">
+				<label for="git_email">Email address</label>
+				<input type="email" class="form-control" id="git_email"  name="git_email" placeholder="Enter email" required>
+			</div>
+			<div class="form-group">
+				<label for="git_pwd">Password</label>
+				<input type="password" class="form-control" id="git_password" name="git_password" placeholder="Password" required>
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+{% endblock %}

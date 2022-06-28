@@ -1,0 +1,111 @@
+{% extends "/admin/dashboard/layout.html.twig" %}
+
+{% block title %}
+	Messages List
+{% endblock %}
+
+{% block style %}
+	.btn-save {
+		color: #fff;
+		background-color: #007bff;
+	}
+	.btn-save:hover {
+		color: #373a3c;
+	}
+	a:focus {
+		color: none;
+		}
+	@media screen and (max-width: 600px) {
+		.csv-button {
+			margin-left: -15px;
+		}
+		.csv-rules {
+			margin-bottom: 15px;
+		}
+	}
+	small {
+		font-size: 15px;
+	}
+{% endblock %}
+
+{% block heading %}
+	<h4>
+		Dashboard
+	</h4>
+	<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_dashboard') }}">
+				<i class="icofont icofont-home"></i>
+			</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_message_index') }}">Messages</a>
+		</li>
+	</ol>
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="card-block">
+						<div class="row">
+							<div class="col-sm-12 table-responsive">
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>Sender</th>
+											<th>Email</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% if (messages and messages.getTotalItemCount > 0) %}
+											{% for index, message in messages %}
+												<tr>
+													<td>{{ messages.getItemNumberPerPage * (messages.getCurrentPageNumber - 1) + index + 1 }}</td>
+													<td> {{ message.getSender() }}</td>
+													<td> {{ message.getEmail() }}</td>
+													<td>
+														<a class="previewPopover" 
+														data-placement="left"
+														data-title="{{ message.getSubject() }}"
+														data-content="{{ message.getContent() }}"
+														>
+															<i class="icofont icofont-eye"></i>
+														</a>
+													</td>
+												</tr>
+											{% endfor %}
+										{% else %}
+											<tr class="text-center">
+												<td colspan="3">No record found.</td>
+											</tr>
+										{% endif %}
+									</tbody>
+								</table>
+								{# Page pagination #}
+								<div class="row">
+									<div class="text-center" style="margin-top: 30px">
+										{{ knp_pagination_render(messages) }}
+									</div>
+								</div>
+								{# End pagination #}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	{% endblock %}
+
+	{% block script %}
+	<script>
+		$('.previewPopover').popover({
+			trigger: 'hover',
+		});
+	</script>
+	{% endblock %}

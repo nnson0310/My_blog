@@ -1,0 +1,53 @@
+<div class="modal" id="create-modal">
+	<div class="modal-dialog">
+		<div
+			class="modal-content">
+			<!-- Modal Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">Create New Topic</h4>
+			</div>
+			<!-- Modal body -->
+			<div class="modal-body">
+				<form action="{{ path('admin_topic_create') }}" id="create-form" method="POST">
+					<input type="hidden" name="_token" value="{{ csrf_token('create_topic') }}">
+					<div class="form-group">
+						<label for="topic_cat">Category</label>
+						<select class="form-control" name="topic_cat" id="topic-cat">
+							<option selected disabled>-- Please select a category --</option>
+							{% if categories is not null %}
+								{% for category in categories %}
+									<option value="{{ category.getId() }}">{{ category.getName() }}</option>
+								{% endfor %}
+							{% endif %}
+						</select>
+						<small id="note" class="form-text text-muted text-danger">
+						</small>
+					</div>
+					<div class="form-group">
+						<label for="topic_name">Name</label>
+						<input class="form-control" type="text" name="topic_name">
+						{% for msg in create_error_name %}
+							<small class="form-text text-muted text-danger">
+								{{ msg }}
+							</small>
+						{% endfor %}
+					</div>
+					<div class="form-group">
+						<label for="topic_desc">Description</label>
+						<textarea class="form-control" name="topic_desc"></textarea>
+						{% for msg in create_error_desc %}
+							<small class="form-text text-muted text-danger">
+								{{ msg }}
+							</small>
+						{% endfor %}
+					</div>
+					<diV class="text-center">
+						<button type="button" class="btn btn-success float-left" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary" id="btnUpdateSubmit">Create</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+

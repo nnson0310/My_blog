@@ -1,0 +1,45 @@
+{% extends 'admin/auth/layout.html.twig' %}
+
+{% block title %} Page not found {% endblock %}
+
+{% block style %}
+    <style>
+        .error-404 {
+            background-color: #F9F9FB;
+            color: #4A4A4F !important;
+        }
+
+        .text-uppercase h2, .text-uppercase p, .text-uppercase a {
+            color: #4A4A4F;
+        }
+
+        .text-uppercase a {
+            line-height: 25px;
+        }
+
+        .text-uppercase img {
+            height: 250px;
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block body %}
+	<div class="error-404">
+    <!-- Container-fluid starts -->
+    <div class="container-fluid">
+        <!-- Row start -->
+        <div class="row">
+            <div class="text-uppercase col-xs-12">
+                <img src="{{ asset('assets/images/page-error.png') }}" alt="">
+                <h2>OOPS!</h2>
+                <p>Something went wrong. Please try again later.</p>
+                <a href="{{ path('admin_dashboard') }}" class="btn btn-error btn-lg waves-effect">back to home page</a>
+            </div>
+        </div>
+        <!-- Row end -->
+    </div>
+    <!-- Container-fluid ends -->
+</div>
+{% endblock %}

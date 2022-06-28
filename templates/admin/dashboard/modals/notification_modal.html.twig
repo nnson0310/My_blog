@@ -1,0 +1,16 @@
+<div class="modal fade" id="notify-modal" tabindex="-1" role="dialog" aria-labelledby="alertModal" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content text-center">
+      <div class="modal-header" style="background-color: #007bff">
+      </div>
+      <div class="modal-body">
+      {% for message in messages %}
+        <h5>{{ message }}<h5>
+      {% endfor %}
+      </div>
+      <div class="modal-footer text-center">
+        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

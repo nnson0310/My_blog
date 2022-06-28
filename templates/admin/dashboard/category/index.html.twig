@@ -1,0 +1,202 @@
+{% extends "/admin/dashboard/layout.html.twig" %}
+
+{% block title %}
+	Category List
+{% endblock %}
+
+{% block style %}
+	.btn-save {
+			color: #fff;
+			background-color: #007bff;
+		}
+		.btn-save:hover {
+			color: #373a3c;
+		}
+		a:focus {
+			color: none;
+		}
+		@media screen and (max-width: 600px) {
+			.csv-button {
+				margin-left: -15px;
+			}
+			.csv-rules {
+				margin-bottom: 15px;
+			}
+		}
+{% endblock %}
+
+{% block heading %}
+	<h4>
+		Dashboard
+	</h4>
+	<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_dashboard') }}">
+				<i class="icofont icofont-home"></i>
+			</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a>Master Data</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_category_index') }}">Category</a>
+		</li>
+	</ol>
+{% endblock %}
+
+{% set messages = app.flashes('msg') %}
+{% set edit_error_name = app.flashes('edit_error_name') %}
+{% set edit_error_desc = app.flashes('edit_error_desc') %}
+{% set create_error_name = app.flashes('create_error_name') %}
+{% set create_error_desc = app.flashes('create_error_desc') %}
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-md-4">
+							<h5 class="card-header-text">
+								<span>
+									<a data-toggle="modal" data-target="#create-modal">
+										<i class="icofont icofont-plus-circle"></i>
+									</a>
+								</span>
+								New category
+							</h5>
+						</div>
+						<div class="col-md-5 offset-md-3">
+							<form id="form" method="POST" action="{{ path('csv_category_import') }}" enctype="multipart/form-data">
+								<input type="hidden" name="_token" value="{{ csrf_token('category_import') }}">
+								<label style="padding-right: 5px">Import CSV File:
+								</label>
+								<input name="csv" type="file" accept="text/csv" style="width: 40%">
+								<button type="submit" class="btn btn-save">
+									<i class="icofont icofont-upload"></i>
+									<span>Import</span>
+								</button>
+							</form>
+						</div>
+					</div>
+
+					<div class="row" style="margin: 15px 0px 10px 0px;">
+						<div class="col-md-4 csv-button csv-rules">
+							<button class="btn btn-primary" data-toggle="modal" data-target="#rules-modal">CSV Rules</button>
+						</div>
+						<div class="col-md-4 offset-md-4 csv-button">
+							<a href="{{ path('csv_category_download') }}" class="btn btn-save">
+								<i class="icofont icofont-download"></i>
+								<span>Download CSV Sample</span>
+							</a>
+						</div>
+					</div>
+
+					<div class="card-block">
+						<div class="row">
+							<div class="col-sm-12 table-responsive">
+								<table class="table table-hover table-striped">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>Name</th>
+											<th>Description</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% if (categories and categories.getTotalItemCount > 0) %}
+											{% for index, category in categories %}
+												<tr>
+													<td>{{ categories.getItemNumberPerPage * (categories.getCurrentPageNumber - 1) + index + 1 }}</td>
+													<td><i class="fa fa-list-alt" aria-hidden="true"></i>	{{ category.getName() }}</td>
+													<td>{{ category.getDescription()|slice(0, 10) }}...</td>
+													<td>
+														<span>
+															<a id="showDeleteModal" data-toggle="modal" data-target="#delete-modal" data-cat-id="{{ category.getId() }}">
+																<i class="icofont icofont-ui-delete"></i>
+															</a>
+														</span>
+														<span style="margin-left: 15px">
+															<a id="showEditModal" data-toggle="modal" data-target="#edit-modal" data-cat-id="{{ category.getId() }}" data-cat-name="{{ category.getName() }}" data-cat-desc="{{ category.getDescription() }}">
+																<i class="icofont icofont-ui-edit"></i>
+															</a>
+														</span>
+													</td>
+												</tr>
+											{% endfor %}
+										{% else %}
+											<tr class="text-center">
+												<td colspan="4">No record found.</td>
+											</tr>
+										{% endif %}
+									</tbody>
+								</table>
+								{# Page pagination #}
+								<div class="row">
+									<div class="text-center" style="margin-top: 30px">
+										{{ knp_pagination_render(categories) }}
+									</div>
+								</div>
+								{# End pagination #}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% include "admin/dashboard/modals/category/delete_modal.html.twig" %}
+		{% include "admin/dashboard/modals/notification_modal.html.twig" with {'msg' : ''} %}
+		{% include "admin/dashboard/modals/category/edit_modal.html.twig" %}
+		{% include "admin/dashboard/modals/category/create_modal.html.twig" %}
+		{% include "admin/dashboard/modals/rules_modal.html.twig" with {"item": "Category", "special_note": ""} %}
+
+	{% endblock %}
+
+	{% block script %}
+		{% if messages %}
+			<script>
+				$("#notify-modal").modal("show");
+			</script>
+		{% endif %}
+
+
+		{# Show edit modal when validation fails #}
+		{% if (edit_error_name or edit_error_desc) %}
+			<script>
+				$("#edit-modal").modal("show");
+			</script>
+		{% endif %}
+		{# Show create modal when validation fails #}
+		{% if (create_error_name or create_error_desc) %}
+			<script>
+				$("#create-modal").modal("show");
+			</script>
+		{% endif %}
+		<script>
+			$("#form").on("submit", function (event) {
+				if (!$('input[type="file"]').val()) {
+				event.preventDefault();
+				alert('Please choose a csv file before submit');
+			}
+			});
+			// pass id of category to delete modal on show
+			$("#delete-modal").on("show.bs.modal", function (event) {
+				var trigger = $(event.relatedTarget);
+				var data = trigger.data("cat-id");
+				var modal = $(this);
+				modal.find("#cat_id").val(data);
+			});
+			// pass category details to edit modal on show
+			$("#edit-modal").on("show.bs.modal", function (event) {
+				var trigger = $(event.relatedTarget);
+				var catId = trigger.data("cat-id");
+				var catName = trigger.data("cat-name");
+				var catDesc = trigger.data("cat-desc");
+				var modal = $(this);
+				modal.find("#cat-id").val(catId);
+				modal.find("#cat-name").val(catName);
+				modal.find("#cat-desc").val(catDesc);
+			});
+		</script>
+	{% endblock %}

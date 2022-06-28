@@ -1,0 +1,239 @@
+{% extends "/admin/dashboard/layout.html.twig" %}
+
+{% block title %}
+	Topic List
+{% endblock %}
+
+{% block style %}
+	.btn-save {
+		color: #fff;
+		background-color: #007bff;
+	}
+	.btn-save:hover {
+		color: #373a3c;
+	}
+	a:focus {
+		color: none;
+	}
+	small {
+		font-size: 15px;
+	}
+	@media screen and (max-width: 600px) {
+		.csv-button {
+			margin-left: -15px;
+		}
+	    .csv-rules {
+			margin-bottom: 15px;
+		}
+	}
+{% endblock %}
+
+{% block heading %}
+	<h4>
+		Dashboard
+	</h4>
+	<ol class="breadcrumb breadcrumb-title breadcrumb-arrow">
+		<li class="breadcrumb-item">
+			<a href="{{ path('admin_dashboard') }}">
+				<i class="icofont icofont-home"></i>
+			</a>
+		</li>
+		<li class="breadcrumb-item">
+			<a>Master Data</a>
+		</li>
+    <li class="breadcrumb-item">
+			<a href="{{ path('admin_topic_index') }}">Topic</a>
+		</li>
+	</ol>
+{% endblock %}
+
+{% set messages = app.flashes('msg') %}
+{% set edit_error_name = app.flashes('edit_error_name') %}
+{% set edit_error_desc = app.flashes('edit_error_desc') %}
+{% set create_error_name = app.flashes('create_error_name') %}
+{% set create_error_desc = app.flashes('create_error_desc') %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-md-4">
+							<h5 class="card-header-text">
+								<span>
+									<a data-toggle="modal" data-target="#create-modal">
+										<i class="icofont icofont-plus-circle"></i>
+									</a>
+								</span>
+								New Topic
+							</h5>
+						</div>
+						<div class="col-md-5 offset-md-3">
+							<form id="form" method="POST" action="{{ path('csv_topic_import') }}" enctype="multipart/form-data">
+								<input type="hidden" name="_token" value="{{ csrf_token('topic_import') }}">
+								<label style="padding-right: 5px">Import CSV File:
+								</label>
+								<input name="csv" type="file" accept="text/csv" style="width: 40%">
+								<button type="submit" class="btn btn-save">
+									<i class="icofont icofont-upload"></i>
+									<span>Import</span>
+								</button>
+							</form>
+						</div>
+					</div>
+
+					<div class="row" style="margin: 15px 0px 10px 0px;">
+						<div class="col-md-4 csv-button csv-rules">
+							<button class="btn btn-primary" data-toggle="modal" data-target="#rules-modal">CSV Rules</button>
+						</div>
+						<div class="col-md-4 offset-md-4 csv-button">
+							<a href="{{ path('csv_topic_download') }}" class="btn btn-save">
+								<i class="icofont icofont-download"></i>
+								<span>Download CSV Sample</span>
+							</a>
+						</div>
+					</div>
+
+					<div class="card-block">
+						<div class="row">
+							<div class="col-sm-12 table-responsive">
+								<table class="table table-hover table-striped">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>Name</th>
+											<th>Description</th>
+                      						<th>Category</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% if (paginatedTopics and paginatedTopics.getTotalItemCount > 0) %}
+											{% for index, topic in paginatedTopics %}
+												<tr>
+													<td>{{ paginatedTopics.getItemNumberPerPage * (paginatedTopics.getCurrentPageNumber - 1) + index + 1 }}</td>
+													<td><i class="fa fa-weibo" aria-hidden="true"></i> {{ topic.getName() }}</td>
+													<td>{{ topic.getDescription() }}</td>
+													<td>{{ topic.getCategory().getName() }}</td>
+													<td>
+														<span>
+															<a id="showDeleteModal" data-toggle="modal" data-target="#delete-modal" data-topic-id="{{ topic.getId() }}">
+																<i class="icofont icofont-ui-delete"></i>
+															</a>
+														</span>
+														<span style="margin-left: 15px">
+															<a id="showEditModal"
+															data-toggle="modal"
+															data-target="#edit-modal"
+															data-topic-cat = "{{ topic.getCategory().getId() }}"
+															data-topic-id="{{ topic.getId() }}"
+															data-topic-name="{{ topic.getName() }}"
+															data-topic-desc="{{ topic.getDescription() }}">
+																<i class="icofont icofont-ui-edit"></i>
+															</a>
+														</span>
+													</td>
+												</tr>
+											{% endfor %}
+										{% else %}
+											<tr>
+												<td colspan="5" style="text-align: center">No record found.</td>
+											</tr>
+										{% endif %}
+									</tbody>
+								</table>
+								{# Page pagination #}
+								<div class="row">
+									<div class="text-center" style="margin-top: 30px">
+										{{ knp_pagination_render(paginatedTopics) }}
+									</div>
+								</div>
+								{# End pagination #}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% include "admin/dashboard/modals/topic/create_modal.html.twig" %}
+		{% include "admin/dashboard/modals/rules_modal.html.twig" with {"item": "Topic", "special_note": "Category must exists. Please check the existing category in master data."} %}
+		{% include "admin/dashboard/modals/topic/delete_modal.html.twig" %}
+		{% include "admin/dashboard/modals/notification_modal.html.twig" %}
+		{% include "admin/dashboard/modals/topic/edit_modal.html.twig" %}
+
+	{% endblock %}
+
+	{% block script %}
+
+		{# Show message after create, delete or edit #}
+		{% if messages %}
+			<script>
+				$("#notify-modal").modal("show");
+			</script>
+		{% endif %}
+
+		{# Show edit modal when validation fails #}
+		{% if (edit_error_desc or edit_error_name) %}
+			<script>
+				$("#edit-modal").modal("show");
+			</script>
+		{% endif %}
+
+		{# Show create modal when validation fails #}
+		{% if (create_error_desc or create_error_name) %}
+			<script>
+				$("#create-modal").modal("show");
+			</script>
+		{% endif %}
+
+
+		<script>
+			//prevent user submit empty csv file
+			$("#form").on("submit", function (event) {
+				if (!$("input[name='csv']").val()) {
+					event.preventDefault();
+					alert("Please choose a csv file before submit.");
+				}
+			});
+
+			//pass params to delete modal
+			$("#delete-modal").on("show.bs.modal", function (event) {
+				var trigger = $(event.relatedTarget);
+				var topicId = trigger.data('topic-id');
+				var modal = $(this);
+				modal.find('#topic-id').val(topicId);
+			});
+
+			//pass params to edit modal
+			$("#edit-modal").on("show.bs.modal", function (event) {
+				var trigger = $(event.relatedTarget);
+				var topicId = trigger.data('topic-id');
+				var topicCat = trigger.data('topic-cat');
+				var topicName = trigger.data('topic-name');
+				var topicDesc = trigger.data('topic-desc');
+				var modal = $(this);
+				modal.find('#topic-id').val(topicId);
+				modal.find('#topic-cat').val(topicCat);
+				modal.find('#topic-name').val(topicName);
+				modal.find('#topic-desc').val(topicDesc);
+			});
+
+			//show message about select category on create modal
+			$('#create-form').on('submit', function (event) {
+				var topicCat = $('#topic-cat').val();
+				if (topicCat == null) {
+					event.preventDefault();
+					$('#note').text('* Please choose a category.');
+				}
+			});
+
+			//remove note of selecting category on change
+			$('#topic-cat').on('change', function () {
+				if ($(this).val != null) {
+					$('#note').text('');
+				}
+			});
+		</script>
+	{% endblock %}

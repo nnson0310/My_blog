@@ -1,0 +1,80 @@
+{% extends 'admin/auth/layout.html.twig' %}
+
+{% block title %}
+	Register Success
+{% endblock %}
+
+{% block style %}
+	.content p, li {
+	    font-size: 15px;
+      color: #666;
+	}
+  .content ul {
+    list-style-type: disc;
+    padding-left: 10px;
+  }
+  p span {
+    font-size: 20px;
+    color: #00b9f5;
+  }
+	.login-card {
+	    width: 700px;
+	}
+	@media only screen and (max-width: 600px) {
+	  .login-card {
+	      width: 100%;
+	  }
+	}
+	h2 {
+	  border-bottom: 1px solid #ececec;
+	  color: #D3262A;
+	  text-align: center;
+	  margin-bottom: 20px;
+	  padding-bottom: 30px;
+	}
+{% endblock %}
+
+{% block body %}
+	<body>
+		<section
+			class="login common-img-bg">
+			<!-- Container-fluid starts -->
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="login-card card-block bg-white">
+							<h2>Thanks for your registration, please check your inbox!</h2>
+							<div class="content">
+								<p>Check the confirmation email at
+									<span>
+										<b>{{ app.session.get('userEmail') }}</b>
+									</span>.
+                				</p>
+								<p>Note: If you do not receive the email in few minutes:</p>
+								<p>
+									<ul>
+										<li>Check your spam folder</li>
+										<li>Check if you type your email correctly</li>
+										<li>If you still could not find it anywhere, you can click
+											<a href="{{ path('mail_register_confirmation') }}">
+												<b>
+													<u>here</u>
+												</b>
+											</a>
+											{# <a href="{{ path('admin_auth_verify_account', {'user': 24}) }}">here<a/> #}
+											to request us for sending another email again.</li>
+										<li>If you already confirmed your email, you can click here <a href="{{ path('admin_auth_login_form') }}"><b><u>here</u></b></a> to return to login page.</li>
+									</ul>
+								</p>
+							</div>
+						</div>
+						<!-- end of login-card -->
+					</div>
+					<!-- end of col-sm-12 -->
+				</div>
+				<!-- end of row-->
+			</div>
+			<!-- end of container-fluid -->
+		</section>
+	</body>
+{% endblock %}
