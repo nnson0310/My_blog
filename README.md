@@ -25,5 +25,6 @@ Gitlab repo: https://gitlab.com/f464/blogger
 
 ### Screenshots
 
+
 ### License
 Feel free to clone and use it as you want. If you find this project useful, please git it a star.
