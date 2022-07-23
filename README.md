@@ -4,10 +4,10 @@ Change project repository's location from gitlab to github
 Gitlab repo: https://gitlab.com/f464/blogger
 
 ### Table of Contents
-1. Important note
-2. Install
-3. Screenshots
-4. License
+1. [Important note](https://github.com/nnson0310/My_blog#important-note)
+2. [Install](https://github.com/nnson0310/My_blog#install)
+3. [Screenshots](https://github.com/nnson0310/My_blog#screenshots)
+4. [License](https://github.com/nnson0310/My_blog#license)
 
 ### Important Note
 1. This project is a blog project, main language is PHP and Javascript.
@@ -24,7 +24,7 @@ Gitlab repo: https://gitlab.com/f464/blogger
 3. Domain for admin site: `your_domain/backdoor/login_form` to go to login page
 
 ### Screenshots
-
+![user-site1](https://github.com/nnson0310/My_blog/blob/develop/screenshots/user1.png)
 
 ### License
-Feel free to clone and use it as you want. If you find this project useful, please git it a star.
+Feel free to clone and use it as you want. If you find this project useful, please give it a star.
