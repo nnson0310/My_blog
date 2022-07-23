@@ -25,6 +25,9 @@ Gitlab repo: https://gitlab.com/f464/blogger
 
 ### Screenshots
 ![user-site1](https://github.com/nnson0310/My_blog/blob/develop/screenshots/user1.png)
+![user-site2](https://github.com/nnson0310/My_blog/blob/develop/screenshots/user2.png)
+![admin-site1](https://github.com/nnson0310/My_blog/blob/develop/screenshots/admin1.png)
+
 
 ### License
 Feel free to clone and use it as you want. If you find this project useful, please give it a star.
